@@ -82,18 +82,21 @@ def left_and_right_lines(hough_lines, img_colour):
         for line in hough_lines:
             for x1, y1, x2, y2 in line:
                 slope = (y2 - y1) / (x2 - x1) #slope
+                print(f"slope: {slope}")
                 if math.fabs(slope) < 0.3: #Only consider extreme slope
                     continue  
                 if slope <= 0: #Negative slope, left group.
-                    left_line_x.extend([x1, x2])
-                    left_line_y.extend([y1, y2])
-                    cv2.line(img_colour_with_left_and_right_lines, (x1, y1), (x2, y2), (0,255,0), 5)
+                    if x1 <= 450 and x2 <= 450: 
+                        left_line_x.extend([x1, x2])
+                        left_line_y.extend([y1, y2])
+                        cv2.line(img_colour_with_left_and_right_lines, (x1, y1), (x2, y2), (0,255,0), 5)
                 else: #Otherwise, right group.
-                    right_line_x.extend([x1, x2])
-                    right_line_y.extend([y1, y2])
-                    cv2.line(img_colour_with_left_and_right_lines, (x1, y1), (x2, y2), (0,0,255), 5)
-        #print(f"left lines in x: {left_line_x} and left lines in y: {left_line_y}")
-        #print(f"right lines in x: {right_line_x} and right lines in y: {right_line_y}")
+                    if x1 > 450 and x2 > 450:
+                        right_line_x.extend([x1, x2])
+                        right_line_y.extend([y1, y2])
+                        cv2.line(img_colour_with_left_and_right_lines, (x1, y1), (x2, y2), (0,0,255), 5)
+        print(f"left lines in x: {left_line_x} and left lines in y: {left_line_y}")
+        print(f"right lines in x: {right_line_x} and right lines in y: {right_line_y}")
     except:
         print("ERROR! No hough lines detected")
     cv2.imshow('Left and right lines', img_colour_with_left_and_right_lines)

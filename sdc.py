@@ -79,7 +79,7 @@ def pipeline(img_name):
     left_line_x, left_line_y, right_line_x, right_line_y = sdc_library.left_and_right_lines(hough_lines, img_colour)
     
     defined_lane_lines = sdc_library.lane_lines(left_line_x, left_line_y, right_line_x, right_line_y, img_colour)      
-    
+
 if __name__ == "__main__":
     
     # Ask the user to enter the path to input images
