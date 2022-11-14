@@ -11,36 +11,28 @@ Usage:
 """
 
 # Import required libraries
-from turtle import left
 import numpy as np
-import matplotlib.pyplot as plt
-#import matplotlib as plt
 import cv2
-from sklearn import linear_model
-import math
 import argparse
 import os
 import time
 
 # Import user-defined libraries
 import sdc_library 
+
 def pipeline(img_name):
     
     # 1.- Read image
-    # Be advissed that cv2.IMREAD_REDUCED_COLOR_4 reduces the
-    # image size by one-fourth
-    #Verify that image exists
     img_colour = sdc_library.input_image(img_name)
    
     #2.- Convert from BGR to RGB then from RGB to greyscale
     grey = sdc_library.greyscale_img(img_colour)
 
     # 3.- Apply Gaussian smoothing
-    # ---filtrado espacial de la imagen---
     kernel_size = (9, 9)
     blur_grey = sdc_library.smoothed_img(grey, kernel_size)
     
-    #Apply Canny edge detector
+    # 4-. Apply Canny edge detector
     low_threshold = 70
     high_threshold = 100
     edges = sdc_library.canny_img(blur_grey, low_threshold, high_threshold)
@@ -61,23 +53,11 @@ def pipeline(img_name):
     min_line_len = 10                    # minimum number of pixels making up a line
     max_line_gap = 30                   # maximum gap in pixels between connectable line segments
     hough_lines = sdc_library.hough(img_colour, roi_image, rho, theta, threshold, min_line_len, max_line_gap)
-    #print(f"detected lines:\n {hough_lines}")
-    #print(f"Number of lines:\n {hough_lines.shape}")
-    """
-    # 7.- Initialise a new images to hold the original image with teh detected lines
-    left_lines, left_slope, right_lines, right_slope = list(), list(), list(), list()
-    ymin, ymax, xmin, xmax = 0.0, 0.0, 0.0, 0.0
-    x_left, y_left, x_right, y_right = list(), list(), list(), list()
 
-    # Slope and standard deviation for left and right lane lines
-    # This metrics were previously obtained after analysing the left and right 
-    # lane lines for a 50-metre road section
-    left_slope_mean, left_slope_std = -20.09187457, 3.40155536
-    right_slope_mean, right_slope_std = 21.71384095, 1.7311898404
-    """
-
+    # 7-. Get the inlier left and right Hough lines
     left_line_x, left_line_y, right_line_x, right_line_y = sdc_library.left_and_right_lines(hough_lines, img_colour)
     
+    # 8-. Draw a single line for the left and right lane lines
     defined_lane_lines = sdc_library.lane_lines(left_line_x, left_line_y, right_line_x, right_line_y, img_colour)      
 
 if __name__ == "__main__":
@@ -105,7 +85,7 @@ if __name__ == "__main__":
         if cv2.waitKey(1) & 0xFF ==ord('q'):
             print("\nProgram interrupted by the user - bye mate!")
             break
-
+        
 
 
 
