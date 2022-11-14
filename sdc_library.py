@@ -122,6 +122,23 @@ def region_of_interest(img, vertices):
 
 
 def hough(img_colour, roi_image, rho, theta, threshold, min_line_len, max_line_gap):
+    """
+    This function gets hough lines with the given parameters and the function HoughLinesP
+    
+    Inputs:
+    img_colour: image with RGB color
+    roi_image: image with the region of interest detected edges
+    rho: distance resolution in pixels of the Hough grid
+    theta: angular resolution in radians of the Hough grid
+    threshold: minimum number of votes (intersections in Hough grid)
+    min_line_len: minimum number of pixels making up a line
+    max_line_gap: maximum gap in pixels between connectable line segments
+
+    Outputs: 
+    hough lines: image with hough lines
+
+    """
+
     img_colour_with_lines = img_colour.copy()
     hough_lines = cv2.HoughLinesP(roi_image, rho, theta, threshold, np.array([]),
                                  minLineLength=min_line_len, maxLineGap=max_line_gap)
@@ -132,6 +149,22 @@ def hough(img_colour, roi_image, rho, theta, threshold, min_line_len, max_line_g
     return hough_lines
 
 def left_and_right_lines(hough_lines, img_colour):
+    """
+    This function draws the left and right lines
+    
+    Inputs:
+    img_colour: image with RGB color
+    hough_lines: image with hough lines
+
+    Outputs: 
+    left_line_x: left points of lines in x axis
+    left_line_y: left points of lines in y axis
+    right_line_x: right points of lines in x axis
+    right_line_y: right points of lines in y axis
+
+
+    """
+
     img_colour_with_left_and_right_lines = img_colour.copy()
     
     #lines arrays
@@ -165,6 +198,22 @@ def left_and_right_lines(hough_lines, img_colour):
     return left_line_x, left_line_y, right_line_x, right_line_y
     
 def lane_lines(left_line_x, left_line_y, right_line_x, right_line_y, img_colour):
+    """
+    This function draws the lane lines
+    
+    Inputs:
+    left_line_x: left points of lines in x axis
+    left_line_y: left points of lines in y axis
+    right_line_x: right points of lines in x axis
+    right_line_y: right points of lines in y axis
+    img_colour: image with RGB color
+
+    Outputs: 
+    define_lines: points of the lane lines 
+
+
+    """
+
     img_lane_lines = img_colour.copy()
     if len(left_line_x)>0 and len(left_line_y)>0 and len(right_line_x)>0 and len(right_line_y)>0:
     
